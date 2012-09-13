@@ -48,6 +48,8 @@ if has("signs")
   sign define VimBreakPt linehl=BreakPtsBreakLine text=>>
         " \ texthl=BreakPtsBreakLine
 endif
+
+
 " Initialization }}}
 
 
@@ -232,13 +234,13 @@ function! s:DoAction() " {{{
     elseif mode ==# 'file'
       let mode = g:breakpts#BM_SCRIPT
     endif
-    call s:OpenListing(0, mode, 0, name)
+    call breakpts#OpenListing(0, mode, 0, name)
     call search('^'.lnum.'\>', 'w')
   elseif browserMode == g:breakpts#BM_SCRIPTS
     let curScript = s:GetScript()
     let curScriptId = s:GetScriptId()
     if curScript != '' && curScriptId != ''
-      call s:OpenListing(0, g:breakpts#BM_SCRIPT, curScriptId, curScript)
+      call breakpts#OpenListing(0, g:breakpts#BM_SCRIPT, curScriptId, curScript)
     endif
   elseif browserMode == g:breakpts#BM_FUNCTION ||
         \ browserMode == g:breakpts#BM_FUNCTIONS
@@ -259,18 +261,18 @@ function! s:DoAction() " {{{
         endif
         let curFunc = '<SNR>' . curSID . '_' . curFunc
       endif
-      call s:OpenListing(0, g:breakpts#BM_FUNCTION, '', curFunc)
+      call breakpts#OpenListing(0, g:breakpts#BM_FUNCTION, '', curFunc)
     endif
   endif
 endfunction " }}}
 
-function! s:OpenListing(force, mode, id, name) " {{{
+function! breakpts#OpenListing(force, mode, id, name) " {{{
   call s:OpenListingWindow(0)
   call s:Browser(a:force, a:mode, a:id, a:name)
 endfunction " }}}
 
 " Accepts a partial path valid under 'rtp'
-function! s:OpenScript(rtPath) " {{{
+function! breakpts#OpenScript(rtPath) " {{{
   let path = a:rtPath
   if ! filereadable(path) && fnamemodify(path, ':p') != path
     for dir in split(&rtp, genutils#CrUnProtectedCharsPattern(','))
@@ -281,7 +283,7 @@ function! s:OpenScript(rtPath) " {{{
   else
     let path = fnamemodify(path, ':p')
   endif
-  call s:OpenListing(0, g:breakpts#BM_SCRIPT, 0, path )
+  call breakpts#OpenListing(0, g:breakpts#BM_SCRIPT, 0, path )
 endfunction " }}}
 
 " Pattern to extract the breakpt number out of the :breaklist.
@@ -808,11 +810,6 @@ function! s:SetupBuf(full)
   command! -buffer BPClearCounters :BreakPtsClearBPCounters
   command! -buffer BPClearAll :BreakPtsClearAll
   command! -buffer -nargs=1 BPSave :BreakPtsSave <args>
-  exec "command! -buffer -nargs=1 -complete=function BPListFunc " .
-        \ ":call <SID>OpenListing(0, '".g:breakpts#BM_FUNCTION."', '', " .
-        \ "substitute(<f-args>, '()\\=', '', ''))"
-  exec "command! -buffer -nargs=1 -complete=file BPListScript " .
-        \ ":call <SID>OpenScript(<f-args>)"
   nnoremap <silent> <buffer> <BS> :BPBack<CR>
   nnoremap <silent> <buffer> <Tab> :BPForward<CR>
   nnoremap <silent> <buffer> <CR> :BPSelect<CR>

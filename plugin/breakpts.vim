@@ -89,6 +89,13 @@ command! -bang -nargs=+ -complete=custom,breakpts#RuntimeComplete Runtime :runti
 command! -nargs=+ -complete=custom,breakpts#BreakAddComplete Breakadd :breakadd <args>
 command! -nargs=+ -complete=custom,breakpts#BreakDelComplete Breakdel :breakdel <args>
 command! -complete=command -nargs=+ Debug :debug <args>
+
+exec "command! -nargs=1 -complete=function BPListFunc " .
+      \ ":call breakpts#OpenListing(0, '".g:breakpts#BM_FUNCTION."', '', " .
+      \ "substitute(<f-args>, '()\\=', '', ''))"
+exec "command! -nargs=1 -complete=file BPListScript " .
+      \ ":call breakpts#OpenScript(<f-args>)"
+
 if exists('*CmdAlias')
   call CmdAlias('runtime', 'Runtime')
   call CmdAlias('breaka', 'Breaka')
