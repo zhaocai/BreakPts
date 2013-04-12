@@ -816,6 +816,7 @@ function! s:SetupBuf(full)
   nnoremap <silent> <buffer> o :BPOpen<CR>
   nnoremap <silent> <buffer> <2-LeftMouse> :BPSelect<CR>
   nnoremap <silent> <buffer> <F9> :BPToggle<CR>
+  nnoremap <silent> <buffer> B :BPToggle<CR>
   nnoremap <silent> <buffer> R :BPRefresh<CR>
   nnoremap <silent> <buffer> [b :BPPrevious<CR>
   nnoremap <silent> <buffer> ]b :BPNext<CR>
